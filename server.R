@@ -19,12 +19,6 @@ shinyServer(function(input, output, session) {
   
   df <- getData()
   
-  # test <- function() { abc <- reactive({
-  #   input$train_test_ratio
-  # })
-  #   return(abc())
-  # }
-  
   getSplitter <- function() {
     splitter <- reactive( {
       sample.split(df$Salary, SplitRatio = as.numeric(input$train_test_ratio))
@@ -32,25 +26,7 @@ shinyServer(function(input, output, session) {
     return(splitter())
   }
   
-  
-  # getTrainingSet <- function() {
-  #   training_set <- eventReactive(input$plot_simple_lm, { subset(df, getSplitter() == TRUE) })
-  #   return(training_set())
-  # }
-  # 
-  # getTestSet <- function() {
-  #   test_set <- eventReactive(input$plot_simple_lm, { subset(df, getSplitter() == FALSE) })
-  #   return(test_set())
-  # }
-  
-  # training_set <- eventReactive(input$plot_simple_lm, { subset(df, getSplitter() == TRUE) })
-  # test_set <- eventReactive(input$plot_simple_lm, { subset(df, getSplitter() == FALSE) })
-  
-  
-  # regr <- lm(Salary ~ YearsExperience, training_set())
-  # y_pred <- predict(regr, newdata = test_set())
-  
-  # observeEvent(input$plot_simple_lm, {print(getTrainingSet())})
+ 
   
   observeEvent(input$plot_simple_lm, {
     splitter <- getSplitter()
