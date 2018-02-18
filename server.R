@@ -31,8 +31,8 @@ shinyServer(function(input, output, session) {
     training_set <- subset(df, splitter == TRUE)
     test_set <- subset(df, splitter == FALSE)
 
-    print(training_set)
-    print(test_set)
+    # print(training_set)
+    # print(test_set)
 
     dependentVar <- input$dv
     independentVar <- selectDependentVar[is.na(pmatch(selectDependentVar,input$dv))]
