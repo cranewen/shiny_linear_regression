@@ -48,7 +48,7 @@ shinyServer(function(input, output, session) {
 
     output$testPlot <- renderPlot(
       ggplot() +
-        geom_point(aes(x = test_set$YearsExperience, y = test_set$Salary), color = 'red') +
+        geom_point(aes(x = test_set[[independentVar]], y = test_set[[dependentVar]]), color = 'red') +
         geom_line(aes(x = training_set[[independentVar]], y = predict(regr, newdata = training_set)), color = 'blue') +
         ggtitle('Salary vs Experience (Test set)') +
         xlab('Years of Experience') + ylab('Salary')
