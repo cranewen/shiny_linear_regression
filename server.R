@@ -21,33 +21,36 @@ shinyServer(function(input, output, session) {
   
   getSplitter <- function() {
     splitter <- reactive( {
-      sample.split(df$Salary, SplitRatio = as.numeric(input$train_test_ratio))
+      sample.split(df[[input$dv]], SplitRatio = as.numeric(input$train_test_ratio))
     })
     return(splitter())
   }
-  
- 
   
   observeEvent(input$plot_simple_lm, {
     splitter <- getSplitter()
     training_set <- subset(df, splitter == TRUE)
     test_set <- subset(df, splitter == FALSE)
-    
+
     print(training_set)
     print(test_set)
+
+    dependentVar <- input$dv
+    independentVar <- selectDependentVar[is.na(pmatch(selectDependentVar,input$dv))]
+    lm_function <- paste(dependentVar, independentVar, sep = " ~ ")
     
-    regr <- lm(Salary ~ YearsExperience, training_set)
+
+    regr <- lm(lm_function, training_set)
     y_pred <- predict(regr, newdata = test_set)
-    output$trainingPlot <- renderPlot(ggplot() + geom_point(aes(x = training_set$YearsExperience, y = training_set$Salary), color = 'red') + 
-                                        geom_line(aes(x = training_set$YearsExperience, y = predict(regr, newdata = training_set)), color = 'blue') + 
-                                        ggtitle('Salary vs Experience (Training set)') + 
+    output$trainingPlot <- renderPlot(ggplot() + geom_point(aes(x = training_set[[independentVar]], y = training_set[[dependentVar]]), color = 'red') +
+                                        geom_line(aes(x = training_set[[independentVar]], y = predict(regr, newdata = training_set)), color = 'blue') +
+                                        ggtitle('Salary vs Experience (Training set)') +
                                         xlab('Years of Experience') + ylab('Salary'))
-    
+
     output$testPlot <- renderPlot(
-      ggplot() + 
-        geom_point(aes(x = test_set$YearsExperience, y = test_set$Salary), color = 'red') + 
-        geom_line(aes(x = training_set$YearsExperience, y = predict(regr, newdata = training_set)), color = 'blue') + 
-        ggtitle('Salary vs Experience (Test set)') + 
+      ggplot() +
+        geom_point(aes(x = test_set$YearsExperience, y = test_set$Salary), color = 'red') +
+        geom_line(aes(x = training_set[[independentVar]], y = predict(regr, newdata = training_set)), color = 'blue') +
+        ggtitle('Salary vs Experience (Test set)') +
         xlab('Years of Experience') + ylab('Salary')
     )
   })
