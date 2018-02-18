@@ -43,15 +43,15 @@ shinyServer(function(input, output, session) {
     y_pred <- predict(regr, newdata = test_set)
     output$trainingPlot <- renderPlot(ggplot() + geom_point(aes(x = training_set[[independentVar]], y = training_set[[dependentVar]]), color = 'red') +
                                         geom_line(aes(x = training_set[[independentVar]], y = predict(regr, newdata = training_set)), color = 'blue') +
-                                        ggtitle('Salary vs Experience (Training set)') +
-                                        xlab('Years of Experience') + ylab('Salary'))
+                                        ggtitle(input$plot_train_title) +
+                                        xlab(input$x_axis) + ylab(input$y_axis))
 
     output$testPlot <- renderPlot(
       ggplot() +
         geom_point(aes(x = test_set[[independentVar]], y = test_set[[dependentVar]]), color = 'red') +
         geom_line(aes(x = training_set[[independentVar]], y = predict(regr, newdata = training_set)), color = 'blue') +
-        ggtitle('Salary vs Experience (Test set)') +
-        xlab('Years of Experience') + ylab('Salary')
+        ggtitle(input$plot_test_title) +
+        xlab(input$x_axis) + ylab(input$y_axis)
     )
   })
 
